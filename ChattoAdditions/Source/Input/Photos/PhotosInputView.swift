@@ -39,7 +39,7 @@ protocol PhotosInputViewProtocol {
 }
 
 protocol PhotosInputViewDelegate: class {
-    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage)
+    func inputView(_ inputView: PhotosInputViewProtocol, didSelectImage image: UIImage, needToConfirm: Bool)
     func inputViewDidRequestCameraPermission(_ inputView: PhotosInputViewProtocol)
     func inputViewDidRequestPhotoLibraryPermission(_ inputView: PhotosInputViewProtocol)
 }
@@ -218,7 +218,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
                     guard let sSelf = self else { return }
 
                     if let image = image {
-                        sSelf.delegate?.inputView(sSelf, didSelectImage: image)
+                        sSelf.delegate?.inputView(sSelf, didSelectImage: image, needToConfirm: false)
                     }
                 }, onCameraPickerDismissed: { [weak self] in
                     self?.liveCameraPresenter.cameraPickerDidDisappear()
@@ -229,7 +229,7 @@ extension PhotosInputView: UICollectionViewDelegateFlowLayout {
                 self.delegate?.inputViewDidRequestPhotoLibraryPermission(self)
             } else {
                 self.dataProvider.requestFullImageAtIndex(indexPath.item - 1) { image in
-                    self.delegate?.inputView(self, didSelectImage: image)
+                    self.delegate?.inputView(self, didSelectImage: image, needToConfirm: true)
                 }
             }
         }
